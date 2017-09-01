@@ -226,5 +226,42 @@ public class TestString {
        
 ~~~
 
+
+
+# Exception
+
+##### 1.ClassNotFoundException
+
+````jav
+ 1.Spring集成JSON报错：java.lang.ClassNotFoundException: 
+  org.codehaus.jackson.JsonProcessingException   ?
+ 老版本 class="org.springframework.http.converter.json.MappingJacksonHttpMessageConverter"
+ 如果将Spring的版本提高到最新的版本(4.3.2.RELEASE)
+ 改为
+ <!--避免IE执行AJAX时，返回JSON出现下载文件 -->
+<bean id="mappingJacksonHttpMessageConverter"
+    class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+		<property name="supportedMediaTypes">
+			<list>
+				<value>text/html;charset=UTF-8</value>
+			</list>
+		</property>
+	</bean>
+ 
+  
+
+
+````
+
+
+
+##### 
+
+
+
+
+
+
+
 # Validation
 
