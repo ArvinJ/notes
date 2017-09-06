@@ -162,7 +162,39 @@ public class TestString {
 }
 ~~~
 
+##### 3.java中length,length(),size()区别
 
+```java
+1 java中的length属性是针对数组说的,比如说你声明了一个数组,想知道这个数组的长度则用到了length这个属性.
+
+2 java中的length()方法是针对字符串String说的,如果想看这个字符串的长度则用到length()这个方法.
+
+3.java中的size()方法是针对泛型集合说的,如果想看这个泛型有多少个元素,就调用此方法来查看!
+  
+  这个例子来演示这两个方法和一个属性的用法
+
+ public static void main(String[] args) {
+        String []list={"ma","cao","yuan"};
+        String a="macaoyuan";
+        System.out.println(list.length);
+        System.out.println(a.length());
+
+
+        List<Object> array=new ArrayList();
+        array.add(a);
+        System.out.println(array.size());
+    }
+
+ 
+
+输出的值为:
+
+3
+
+9
+
+1
+```
 
 
 
@@ -256,6 +288,16 @@ public class TestString {
 
 
 ##### 
+
+# hql
+
+##### 1.hql  相同的id 只查询一条
+
+```mys
+#使用group by id
+String hql = "select new QuestionFeature(qf.featureCode, qf.featureDesc,qf.featureIcon)  from QuestionType qt, QuestionFeature qf"
+				+ "  where qt.featureCodeId = qf.id  and qt.parentId=:parentId and qt.status = :status and qf.status = :qfStatus group by qt.featureCodeId";
+```
 
 
 
