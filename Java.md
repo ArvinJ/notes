@@ -307,3 +307,9 @@ String hql = "select new QuestionFeature(qf.featureCode, qf.featureDesc,qf.featu
 
 # Validation
 
+# soft
+
+##### 1.Zeplin   用于 产品UI交互图
+
+
+
