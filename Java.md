@@ -678,17 +678,94 @@ rm 	b.txt
 彻底从版本库中删掉
 git rm b.txt
 
+```
+
+##### 2.回退版本
+
+````doc
+1.本地分支版本回退的方法
+先用下面命令找到要回退的版本的commit id：
+git reflog 
+接着回退版本:
+git reset --hard Obfafd
+0bfafd就是你要回退的版本的commit id的前面几位
 
 
+2.自己的远程分支版本回退的方法
+如果你的错误提交已经推送到自己的远程分支了，那么就需要回滚远程分支了
+首先要回退本地分支：
+git reflog
+git reset --hard Obfafd
+紧接着强制推送到远程分支：
+git push -f
+注意：本地分支回滚后，版本将落后远程分支，必须使用强制推送覆盖远程分支，否则无法推送到远程分支
 
 
+3.公共远程分支版本回退的问题
+git revert HEAD                     //撤销最近一次提交
+git revert HEAD~1                   //撤销上上次的提交，注意：数字从0开始
+git revert 0ffaacc                  //撤销0ffaacc这次提交
+git revert 命令意思是撤销某次提交。它会产生一个新的提交，虽然代码回退了，但是版本依然是向前的，所以，当你用revert回退之后，所有人pull之后，他们的代码也自动的回退了。 
 
 
+http://blog.csdn.net/fuchaosz/article/details/52170105
 
+````
 
+##### 3.branch
 
+```doc
+git branch
+git branch 不带参数：列出本地已经存在的分支，并且在当前分支的前面加“*”号标记，
+git branch -r 列出远程分支
+git branch -a 列出本地分支和远程分支
+git branch 创建一个新的本地分支，需要注意，此处只是创建分支，不进行分支切换
+git branch newbranch2
+git branch -m | -M oldbranch newbranch 重命名分支，如果newbranch名字分支已经存在，则需要使用-M强制重命名，否则，使用-m进行重命名。
+git branch -d | -D branchname 删除branchname分支
+git branch -d -r branchname 删除远程branchname分支
+git checkout newbranch2 切换分支
 
 ```
+
+##### 4.merge
+
+````doc
+git merge 用来做分支合并，将其他分支中的内容合并到当前分支中。比如分支结构如下：
+
+                        master
+                         /
+C0 ---- C1 ---- C2 ---- C4
+                         \
+                         C3 ---- C5
+                                  \
+                                issueFix
+当前分支是master
+$ git checkout master
+
+把issueFix中的内容Merge进来：
+$ git merge issueFix
+
+如果没有冲突的话，merge完成。有冲突的话，git会提示那个文件中有冲突，比如有如下冲突：
+
+<<<<<<< HEAD:test.c
+
+printf (“test1″);
+
+=======
+
+printf (“test2″);
+
+>>>>>>> issueFix:test.c
+
+可以看到 ======= 隔开的上半部分，是 HEAD（即 master 分支，在运行 merge 命令时检出的分支）中的内容，下半部分是在 issueFix 分支中的内容。解决冲突的办法无非是二者选其一或者由你亲自整合到一起。比如你可以通过把这段内容替换为下面这样来解决：
+
+printf (“test2″);
+
+这个解决方案各采纳了两个分支中的一部分内容，而且删除了 <<<<<<<，=======，和>>>>>>> 这些行。在解决了所有文件里的所有冲突后，运行 git add 将把它们标记为已解决（resolved）。因为一旦暂存，就表示冲突已经解决。如果你想用一个有图形界面的工具来解决这些问题，不妨运行 git mergetool，它会调用一个可视化的合并工具并引导你解决所有冲突
+
+
+````
 
 
 
