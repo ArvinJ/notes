@@ -612,6 +612,84 @@ cat /etc/issue    // 查看linux 版本
 
 
 
+# Git
+
+   Git是目前世界上最先进的分布式版本控制系统。 SVN是集中式版本控制系统，版本库是集中放在中央服务器的。
+
+##### 1.git的使用
+
+```doc
+pwd 命令是用于显示当前的目录。
+/D/TeLuoYiArvin/notes
+
+git init 
+把这个目录变成git可以管理的仓库。目录下会多了一个.git的目录，这个目录是Git来跟踪管理版本的
+
+step1
+git add .
+git add readme.txt添加到暂存区里面去
+
+step2
+git commit -m "modify code"
+git commit告诉Git，把文件提交到仓库。
+
+git status
+通过命令git status来查看是否还有文件未提交
+
+git diff readme.txt
+看下readme.txt文件到底改了什么内容
+
+git log
+readme.txt文件做了三次修改了，那么我现在想查看下历史记录
+
+git log --pretty=oneline 
+查看版本库所有提交的版本记录。
+
+git reset  --hard HEAD^
+把当前的版本回退到上一个版本
+查看下 readme.txt内容如下：通过命令cat readme.txt查看
+
+git reset  --hard HEAD^^
+把当前的版本回退到上上一个版本
+
+git reset  --hard HEAD~100
+回退到前100个版本
+
+
+回退到最新的版本 通过版本号回退
+获取到版本号：git reflog    
+结果：6fcfc89
+git reset  --hard 6fcfc89 来恢复了
+
+
+    工作区：就是你在电脑上看到的目录，比如目录下testgit里的文件(.git隐藏目录版本库除外)。或者以后需要再新建的目录文件等等都属于工作区范畴。
+
+    版本库(Repository)：工作区有一个隐藏目录.git,这个不属于工作区，这是版本库。其中版本库里面存了很多东西，其中最重要的就是stage(暂存区)，还有Git为我们自动创建了第一个分支master,以及指向master的一个指针HEAD。
+    Git提交文件到版本库有两步：
+      第一步：是使用 git add 把文件添加进去，实际上就是把文件添加到暂存区。
+      第二步：使用git commit提交更改，实际上就是把暂存区的所有内容提交到当前分支上。
+
+撤销修改
+git checkout  --  readme.txt
+把readme.txt文件在工作区做的修改全部撤销
+
+rm 	b.txt
+直接在文件目录中把文件删了
+彻底从版本库中删掉
+git rm b.txt
+
+
+
+
+
+
+
+
+
+
+
+```
+
 
 
 
