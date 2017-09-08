@@ -198,9 +198,257 @@ public class TestString {
 
 
 
+##### 4.java 返回json逻辑
+
+```java
+
+
+protected void print(){
+        try {
+            JSONObject resultObject = new JSONObject();
+            resultObject = new JSONObject();
+            resultObject.put("code", code.getCode());
+            resultObject.put("message", code.getMessage());
+            resultObject.put("details", details);
+
+            HttpServletResponse response = ServletActionContext.getResponse();
+            response.setCharacterEncoding("utf-8");
+            response.setContentType("application/json;charset=utf-8");
+            PrintWriter out=response.getWriter();
+
+            out.print(resultObject);
+            out.close();
+
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+        }
+
+    }
+
+
+public String findQuestionByIds(){
+		try {
+			params();
+			logger.info(data);
+			if(TextUtil.isNullOrEmpty(data)){
+				code = Code.ERROR_PARAMS_NULL;
+			}else{
+				JSONObject params = JSONObject.fromObject(data);
+				String questionIds=params.getString("questionIds");
+				List<Question> list=new ArrayList<Question>();
+				if(questionIds!=null&&questionIds.length()>0){
+					String[] str=questionIds.split(",");
+					Long[] ids=new Long[str.length];
+					for(int i=0;i<str.length;i++){
+						ids[i]=Long.parseLong(str[i]);
+					}
+					list=questionService.findQuestionsById(ids);
+					code = Code.SUCCESS;
+				}else{
+					code = Code.ERROR_LACK_QUESTION;
+				}
+				Map<String,Object> map=new HashMap<String,Object>();
+				map.put("questions", list);
+				details=map;
+			}	
+		} catch (Exception e) {
+			code = Code.ERROR;
+			e.printStackTrace();
+		}
+		print();
+		return null;
+	}
+
+public String findPage(){
+		try {
+			params();
+			logger.info(data);
+			if(TextUtil.isNullOrEmpty(data)){
+				code = Code.ERROR_PARAMS_NULL;
+			}else{
+				JSONObject params = JSONObject.fromObject(data);
+				Integer subjectId=params.getInt("subjectId")==0?null:params.getInt("subjectId");
+				Integer studentId=params.getInt("studentId");
+				Integer pageIndex=params.getInt("pageIndex");
+				Integer pageSize=params.getInt("pageSize");
+				Integer begin=pageSize*(pageIndex-1);
+				PrepPreview prepPreview=new PrepPreview();
+				prepPreview.setSubjectId(subjectId);
+				List<StuPreview> stuPreviews=previewService.findPrepPreviewByParam(subjectId,studentId,begin,pageSize);
+				details=stuPreviews;
+				code=Code.SUCCESS;
+			}
+		} catch (Exception e) {
+			code=Code.ERROR;
+			e.printStackTrace();
+		}
+		print();
+		return SUCCESS;
+	}
+
+
+public String submitAnswer(){
+		try {
+			params();
+			logger.info(data);
+			if(TextUtil.isNullOrEmpty(data)){
+				code = Code.ERROR_PARAMS_NULL;
+			}else{
+				JSONObject params = JSONObject.fromObject(data);
+				Integer previewId=params.getInt("previewId");
+				Integer studentId=params.getInt("studentId");
+				String answer=params.getString("answer");
+				Integer timeCost=JSONUtil.parseInt(params, "timeCost", true);
+				PrepPreview pp=previewService.findPrepPreviewById(previewId);
+				if(pp==null||pp.getStatus()==PrepPreview.STAT_DELETE){
+					code=Code.ERROR_HOMEWORK_NULL;
+				}else{
+					PrepPreviewStudent pps=previewService.findStudentByParams(previewId, studentId);
+					pps.setAnswer(answer);
+					pps.setStatus(PrepPreviewStudent.STATUS_ANSWERED);
+					pps.setTimeCost(timeCost);
+					pps.setSubmitTime(new Date());
+					previewService.saveOrUpdatePreviewStudent(pps);
+					code=Code.SUCCESS;
+				}
+			}
+		} catch (Exception e) {
+			code=Code.ERROR;
+			e.printStackTrace();
+		}
+		print();
+		return SUCCESS;
+	}
+```
+
+##### 5.全角空格trim
+
+```java
+
+
+public static String replaceBlank(String str) {
+		String dest = "";
+		if (str != null) {
+			Pattern p = Pattern.compile("\\s*|\t|\r|\n");
+			Matcher m = p.matcher(str);
+			dest = m.replaceAll("");
+			dest=dest.replace((char)12288, ' ').trim();
+		}
+		return dest;
+	}
+
+	public static void main(String[] args) {
+		String str="　　";
+		for (char c : str.toCharArray()) {
+			System.out.println((int)c);
+		}
+		System.out.println();
+	}
+
+```
+
+# JQuery
+
+##### 1.click
+
+```javascript
+$("button").click(function(){
+  $("p").slideToggle();
+});
+```
+
+##### 2.mouseover,mouseout
+
+```javasc
+<script type="text/javascript">
+var isClick = true;
+var isAClick = true;
+$(document).ready(function(){
+	
+	$(".examine").mouseover(function(){
+		$(".analogDevices").hide();
+		var temp=$(this).attr("id").substring(7);
+		$("#analogDevices"+temp).show();
+	}); 
+	
+	$(".examine").click(function(){
+		 isClick = false; 
+		var temp=$(this).attr("id").substring(7);
+		$("#analogDevices"+temp).show();
+	}); 
+	
+	$(".examine").mouseout(function(){
+		 if(isClick) {
+			var temp=$(this).attr("id").substring(7);
+			$("#analogDevices"+temp).hide();
+		 }
+		 isClick = true;
+	});  
+	
+	
+	$(".examineAns").mouseover(function(){
+		$(".analogDevicesAns").hide();
+		var temp=$(this).attr("id").substring(10);
+		$("#analogDevicesAns"+temp).show();
+	}); 
+	
+	$(".examineAns").click(function(){
+		 isAClick = false; 
+		var temp=$(this).attr("id").substring(10);
+		$("#analogDevicesAns"+temp).show();
+	}); 
+	
+	$(".examineAns").mouseout(function(){
+		 if(isAClick) {
+			var temp=$(this).attr("id").substring(10);
+			$("#analogDevicesAns"+temp).hide();
+		 }
+		 isAClick = true;
+	});  
+	
+});
+</script>	
+```
 
 
 
+
+
+# JSTL
+
+##### 1.[JSTL 的 if else : 有 c:if 没有 else 的处理------<c:choose>]
+
+```jsp
+<c:choose>
+   <c:when test="">如果
+   </c:when>
+   <c:otherwise>  否则
+   </c:otherwise>
+</c:choose>
+
+
+<c:choose>
+		<c:when test="${bean.featureCode eq '400003'}">
+            <li style="font-size:16px">请点击空格，输入答案</li>
+            <li class="question">${bean.questionContent }</li>
+		</c:when>
+		<c:when test="${bean.featureCode eq '400004' or bean.featureCode eq '500004' }">
+			<li style="font-size:16px">答题区：框内为答题区</li>
+			<li class="question" style="border:1px solid black">${bean.questionContent }</li>
+		</c:when>  
+        <c:otherwise>  
+            <li class="question">${bean.questionContent }</li>
+        </c:otherwise>
+</c:choose>
+
+
+<c:if test="${!empty bean.opts }">
+    <c:forEach items="${bean.opts }" var="opt">
+    	 <li class="list <c:if test="${bean.correctAnswer eq opt.optionTitle }">active</c:if>"><span id="mlOptionTitle" <c:if test="${bean.correctAnswer eq opt.optionTitle }">class="cur"</c:if>>${opt.optionTitle }</span><span id="mlOptionContent" >${opt.optionContent }</span></li>
+    </c:forEach>
+</c:if>
+
+```
 
 
 
@@ -297,6 +545,69 @@ public class TestString {
 #使用group by id
 String hql = "select new QuestionFeature(qf.featureCode, qf.featureDesc,qf.featureIcon)  from QuestionType qt, QuestionFeature qf"
 				+ "  where qt.featureCodeId = qf.id  and qt.parentId=:parentId and qt.status = :status and qf.status = :qfStatus group by qt.featureCodeId";
+```
+
+
+
+# React.js
+
+```javasc
+React 是一个用于构建用户界面的 JAVASCRIPT 库。
+
+React 是一个用于构建用户界面的 JAVASCRIPT 库。
+React主要用于构建UI，很多人认为 React 是 MVC 中的 V（视图）。
+React 起源于 Facebook 的内部项目，用来架设 Instagram 的网站，并于 2013 年 5 月开源。
+React 拥有较高的性能，代码逻辑非常简单，越来越多的人已开始关注和使用它。
+
+
+React 特点
+1.声明式设计 −React采用声明范式，可以轻松描述应用。
+2.高效 −React通过对DOM的模拟，最大限度地减少与DOM的交互。
+3.灵活 −React可以与已知的库或框架很好地配合。
+4.JSX − JSX 是 JavaScript 语法的扩展。React 开发不一定使用 JSX ，但我们建议使用它。
+5.组件 − 通过 React 构建组件，使得代码更加容易得到复用，能够很好的应用在大项目的开发中。
+6.单向响应的数据流 − React 实现了单向响应的数据流，从而减少了重复代码，这也是它为什么比传统数据绑定更简单。
+
+第一个实例 HelloWorld!
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Hello React!</title>
+    <script src="https://cdn.bootcss.com/react/15.4.2/react.min.js"></script>
+    <script src="https://cdn.bootcss.com/react/15.4.2/react-dom.min.js"></script>
+    <script src="https://cdn.bootcss.com/babel-standalone/6.22.1/babel.min.js"></script>
+  </head>
+  <body>
+    <div id="example"></div>
+    <script type="text/babel">
+      ReactDOM.render(
+        <h1>Hello, world!</h1>,
+        document.getElementById('example')
+      );
+    </script>
+  </body>
+</html>
+
+
+
+
+
+React 安装
+1.你可以在官网 http://facebook.github.io/react/ 下载最新版。
+2.你也可以直接使用 BootCDN 的 React CDN 库
+<script src="https://cdn.bootcss.com/react/15.4.2/react.min.js"></script>
+<script src="https://cdn.bootcss.com/react/15.4.2/react-dom.min.js"></script>
+<script src="https://cdn.bootcss.com/babel-standalone/6.22.1/babel.min.js"></script>
+
+```
+
+# Linux
+
+##### 1.命令
+
+```doc
+cat /etc/issue    // 查看linux 版本
 ```
 
 
