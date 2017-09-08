@@ -349,6 +349,12 @@ public static String replaceBlank(String str) {
 
 # JQuery
 
+```DOC
+JQuery api  http://www.jquery123.com/
+```
+
+
+
 ##### 1.click
 
 ```javascript
@@ -766,6 +772,38 @@ printf (“test2″);
 
 
 ````
+
+
+
+# Chrome 帐号
+
+zhuwenjin1221@gmail.com    
+
+
+
+
+
+
+
+
+
+# GitHub
+
+```doc
+开源项目
+https://github.com/spring-projects
+https://github.com/hibernate/
+https://github.com/apache/maven
+
+```
+
+
+
+
+
+# API
+
+##### all-api   http://tool.oschina.net/apidocs
 
 
 
