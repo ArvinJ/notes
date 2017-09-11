@@ -464,6 +464,14 @@ $(document).ready(function(){
 
 # JavaScript
 
+### url
+
+```javascript
+js特效代码网---------------http://www.jstxdm.com/
+```
+
+
+
 #### 1.通过url获取一张网络图片的width,height
 
 ~~~javascript
@@ -508,9 +516,48 @@ $(document).ready(function(){
         	}
         	
         }
-        
-       
+      
 ~~~
+
+##### 2.禁止页面滚动
+
+```javasc
+1. pc端实现
+$('body').css('overflow','hidden');//浮层出现时窗口不能滚动设置
+$('body').css('overflow','auto');// 浮层关闭时滚动设置
+
+2.移动端实现
+var preHandler=function(e){e.preventDefault();},// 注意此处代码片段必须这样提出来已保证传入下边两个事件的处理程序一样才生效，分别写到事件处理程序中不生效。
+document.addEventListener('touchmove', me.preHandler,false);//阻止默认滑动事件
+document.removeEventListener('touchmove', me.preHandler, false);//浮层关闭时解除事件处理程序
+
+3.浮层实现效果
+.mask{
+    position: fixed;
+    top:0;
+    left:0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.7);
+    z-index: 99;
+}
+.box-introduce-content{ // 浮层中内容上下左右居中实现
+    position: absolute;
+    margin: auto;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 0 0.15rem;
+    height: 4.23rem;
+}
+```
+
+##### 3.鼠标放到控件标签上有提示
+
+```javasc
+<li title="提示" />
+```
 
 
 
