@@ -821,7 +821,47 @@ set方法负责设置，get方法负责取出来，交给Action。
 
 
 
-##### 
+# SQL
+
+##### 1.sql的表添加字段
+
+```sql
+alter table t_question_property add type int(11);
+```
+
+##### 2.sql的表修改字段类型
+
+```sql
+ALTER TABLE t_question_property modify COLUMN type varchar(200);
+```
+
+##### 3.sql的表更新记录
+
+```sql
+update t_question_property  set type='error'  where 1=1;
+```
+
+##### 4.sql的表添加记录
+
+```sql
+INSERT INTO Persons (LastName, Address) VALUES ('Wilson', 'Champs-Elysees');
+```
+
+##### 5.sql的表删除记录
+
+```sql
+DELETE FROM Person WHERE LastName = 'Wilson' 
+```
+
+##### 6.sql的表查询记录
+
+```sql
+select * from t_question order by _id desc limit 10;
+```
+
+
+
+
 
 # hql
 
