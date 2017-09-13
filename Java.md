@@ -347,7 +347,7 @@ public static String replaceBlank(String str) {
 
 ```
 
-##### 3.分割，截取字符串
+##### 6.分割，截取字符串
 
 ```java
 1>分割  split()
@@ -388,7 +388,168 @@ public static String replaceBlank(String str) {
 	            System.out.println(matcher.group(1));//打印中间字符
 	        }
 	}
+
+
+	String rightContent[] =  title.split(map.get("identifyingRightBracket"));
+	String leftContent[] =  rightContent[0].split(map.get("identifyingLeftBracket"));
+	logger.info("打印中间字符----"+leftContent[1]);
+									
   
+  
+```
+
+##### 7.List 排序
+
+```java
+i.方式一:直接实现匿名类方法
+
+Collections.sort(questionList,new Comparator<Question>(){
+
+			@Override
+			public int compare(Question o1, Question o2) {
+				// 默认升序
+				return o1.getAuxiliaryNumber().compareTo(o2.getAuxiliaryNumber());
+			}
+});
+
+Collections.sort(questionList,new Comparator<Question>(){
+
+			@Override
+			public int compare(Question o1, Question o2) {
+				// 默认升序
+				int tempAuxiliaryNumber = o1.getAuxiliaryNumber().compareTo(o2.getAuxiliaryNumber());
+				if(tempAuxiliaryNumber==0){
+                  // 默认降序
+				return o2.getSequence().compareTo(o1.getSequence());
+				}
+				return tempAuxiliaryNumber;
+			}
+});
+
+ii.方式二：实现类
+  
+package com.ahhf.ljxbw;
+
+public class User implements Comparable<User> {
+
+	
+	private Integer age ;
+	private Integer mark;
+	private String userName;
+	public Integer getAge() {
+		return age;
+	}
+	public void setAge(Integer age) {
+		this.age = age;
+	}
+	public Integer getMark() {
+		return mark;
+	}
+	public void setMark(Integer mark) {
+		this.mark = mark;
+	}
+	public String getUserName() {
+		return userName;
+	}
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
+	@Override
+	public int compareTo(User o) {
+		// 默认为升序  this.getMark().compareTo(o.getMark()); 反之为降序
+		//return this.getMark().compareTo(o.getMark());
+		// 第一字段 以mark desc
+		int  temp = o.getMark().compareTo(this.getMark());
+		if(temp==0){
+			// 第二字段 以age desc
+			return this.getAge().compareTo(o.getAge());
+		}
+		return temp;
+	}
+	@Override
+	public String toString() {
+		return "User [age=" + age + ", mark=" + mark + ", userName=" + userName + "]";
+	}
+	
+	
+}
+
+package com.ahhf.ljxbw;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import org.junit.Test;
+
+public class SortMain {
+
+	@Test
+	public void test01() {
+		User u1 = new User();
+		u1.setAge(10);
+		u1.setMark(100);
+		u1.setUserName("u1");
+		User u2 = new User();
+		u2.setAge(11);
+		u2.setMark(100);
+		u2.setUserName("u2");
+		User u3 = new User();
+		u3.setAge(10);
+		u3.setMark(98);
+		u3.setUserName("u3");
+
+		List<User> ulist = new ArrayList<User>();
+		ulist.add(u1);
+		ulist.add(u2);
+		ulist.add(u3);
+		Collections.sort(ulist);
+		for (User user : ulist) {
+			System.err.println(user.toString());
+		}
+
+	}
+
+	
+
+}
+
+
+```
+
+##### 8.compareTo() 方法的使用
+
+```java
+compareTo() 方法用于将 Number 对象与方法的参数进行比较。可用于比较 Byte, Long, Integer等。
+该方法用于两个相同数据类型的比较，两个不同类型的数据不能用此方法来比较。由于比较的变量我用的是int，int型可以直接比较，所有没有用到compareTo比较，如果声明的是Date、String、Integer或者其他的，可以直接使用compareTo比较，compareTo方法内必须做非空判断（规范问题），当然int类型就不用了。
+注意事项：
+
+        1模型必须实现Comparable<T>接口
+
+        2Collections.sort(list);会自动调用compareTo，如果没有这句，list是不会排序的，也不会调用compareTo方法
+
+        3如果是数组则用的是Arrays.sort(a)方法
+  
+语法：
+public int compareTo( NumberSubClass referenceName )
+
+参数：
+referenceName -- 可以是一个 Byte, Double, Integer, Float, Long 或 Short 类型的参数。
+  
+返回值： 
+如果指定的数与参数相等返回0。
+如果指定的数小于参数返回 -1。
+如果指定的数大于参数返回 1。
+  
+ public class Test{ 
+   public static void main(String args[]){
+      Integer x = 5;
+      System.out.println(x.compareTo(3)); // 1
+      System.out.println(x.compareTo(5)); // 0
+      System.out.println(x.compareTo(8)); // -1           
+     }
+}
+
   
 ```
 
