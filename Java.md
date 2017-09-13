@@ -347,6 +347,53 @@ public static String replaceBlank(String str) {
 
 ```
 
+##### 3.分割，截取字符串
+
+```java
+1>分割  split()
+  String str = "abc,12,3yy98,0";
+  String[]  strs=str.split(",");
+  for(int i=0,len=strs.length;i<len;i++){
+      System.out.println(strs[i].toString());
+  }
+
+2>截取  subString()  
+  	i.只传一个参数 : 
+   	String sb = "bbbdsajjds";
+    sb.substring(2);
+	将字符串从索引号为2开始截取，一直到字符串末尾。（索引值从0开始）； 
+     //bdsajjds
+     
+    ii.传入2个索引值:
+	String sb = "bbbdsajjds";
+	sb.substring(2, 4);
+	从索引号2开始到索引好4结束（并且不包含索引4截取在内，也就是说实际截取的是2和3号字符）； 
+	//bd
+      
+    iii.通过StringUtils提供的方法： 
+    StringUtils.substringBefore(“dskeabcee”, “e”); 
+    /结果是：dsk/ 
+    这里是以第一个”e”，为标准。
+	StringUtils.substringBeforeLast(“dskeabcee”, “e”) 
+    结果为：dskeabce 
+    这里以最后一个“e”为准。
+      
+    Vi.截取两个标签之间字符串 ：
+   public static void main(String[] args) {
+			String str = "<img src='www.baidu.com/a'/>333sad2f444 <img src='www.baidu.com/b'/>";
+	        String regex = "333(.*)444";
+	        Pattern pattern = Pattern.compile(regex);
+	        Matcher matcher = pattern.matcher(str);//匹配类
+	        while (matcher.find()) {
+	            System.out.println(matcher.group(1));//打印中间字符
+	        }
+	}
+  
+  
+```
+
+
+
 # JQuery
 
 ```DOC
@@ -586,6 +633,31 @@ document.removeEventListener('touchmove', me.preHandler, false);//浮层关闭�
 
 ````
 
+##### 2.java.lang.NoSuchFieldException: resourceEntries
+
+```java
+JSP表单里面的表单输入
+<input type= "text" name="user">这里面的每一个输入都是一个Attribute，相当于setAttribute("name",user);
+
+如果是提交到Action里面，则需要相应的Action有对应的同名变量定义和setter/getter方法，即使你没有用它做任何操作。
+
+Action里面的提供Setter/Getter的方法会将其取出来交给execute方法。
+如：
+type varname;
+
+public String getVarname() {
+return varname;
+}
+
+public void setVarname( type varname) {
+this.varname = varname;
+}
+set方法负责设置，get方法负责取出来，交给Action。
+
+出现这种错误的提示，一般都是因为：表单提交的页面的变量在Action里面没有相应的变量定义，也没有相应的setter/getter方法。
+具体可以分析源码。
+```
+
 
 
 ##### 
@@ -661,6 +733,14 @@ React 安装
 
 ```doc
 cat /etc/issue    // 查看linux 版本
+```
+
+# Maven
+
+##### 1.run -->maven install 常见jdk,jre的错误
+
+```doc
+解决方式：Windows--->preferences -->java---> Installed JREs---->editor ---->jdk
 ```
 
 
