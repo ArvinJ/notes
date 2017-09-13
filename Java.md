@@ -1139,6 +1139,47 @@ https://github.com/apache/maven
 
 # Validation
 
+##### 1.java中判断字符串是否为数字的方法
+
+```java
+i. 方式1 
+import org.apache.commons.lang.StringUtils;
+StringUtils.isNumeric("123")  = true
+ii.方式2
+import java.util.regex.Pattern;
+import java.util.regex.Matcher;
+public boolean isNumeric(String str){ 
+  // 正则表达式 
+  Pattern pattern = Pattern.compile("[0-9]*"); 
+   Matcher isNum = pattern.matcher(str);
+   if( !isNum.matches() ){
+       return false; 
+   } 
+   return true; 
+}
+iii.方式3
+public static boolean isNumeric(String str){
+  //用JAVA自带的函数
+  for (int i = 0; i < str.length(); i++){
+   System.out.println(str.charAt(i));
+   if (!Character.isDigit(str.charAt(i))){
+    return false;
+   }
+  }
+  return true;
+ }  
+```
+
+
+
+## 防止绕过登录 url访问
+
+
+
+
+
+
+
 # soft
 
 ##### 1.Zeplin   用于 产品UI交互图
