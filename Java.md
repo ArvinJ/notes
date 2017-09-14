@@ -1170,6 +1170,167 @@ public static boolean isNumeric(String str){
  }  
 ```
 
+##### 2.判断str1中包含str2的个数
+
+```java
+public static int countStr(String str1, String str2) {
+		if (str1.indexOf(str2) == -1) {
+			return 0;
+		} else if (str1.indexOf(str2) != -1) {
+			counter++;
+			countStr(str1.substring(str1.indexOf(str2) + str2.length()), str2);
+			return counter;
+		}
+		return 0;
+	}
+```
+
+##### 3.半角转全角
+
+```java
+public static String ToSBC(String input) {
+		char c[] = input.toCharArray();
+		for (int i = 0; i < c.length; i++) {
+			if (c[i] == ' ') {
+				c[i] = '\u3000';
+			} else if (c[i] < '\177') {
+				c[i] = (char) (c[i] + 65248);
+
+			}
+		}
+		return new String(c);
+	}
+```
+
+##### 4.全角转半角
+
+```java
+public static String ToDBC(String input) {
+
+		char c[] = input.toCharArray();
+		for (int i = 0; i < c.length; i++) {
+			if (c[i] == '\u3000') {
+				c[i] = ' ';
+			} else if (c[i] > '\uFF00' && c[i] < '\uFF5F') {
+				c[i] = (char) (c[i] - 65248);
+
+			}
+		}
+		String returnString = new String(c);
+
+		return returnString;
+	}
+```
+
+##### 5.String 和ASCII码转换
+
+```java
+public static String stringToAscii(String value) {
+		StringBuffer sbu = new StringBuffer();
+		char[] chars = value.toCharArray();
+		for (int i = 0; i < chars.length; i++) {
+			if (i != chars.length - 1) {
+				sbu.append((int) chars[i]).append(",");
+			} else {
+				sbu.append((int) chars[i]);
+			}
+		}
+		return sbu.toString();
+
+	}
+
+	public static String asciiToString(String value) {
+		StringBuffer sbu = new StringBuffer();
+		String[] chars = value.split(",");
+		for (int i = 0; i < chars.length; i++) {
+			sbu.append((char) Integer.parseInt(chars[i]));
+		}
+		return sbu.toString();
+	}
+```
+
+##### 6.判断一张网络图片url  宽度是否在600~640之间
+
+```java
+String str="<img src='www.baidu.com/haha.png'>";
+Document titleDoc = Jsoup.parseBodyFragment(str);
+	Elements imgElements = titleDoc.select("img");
+	String tempSrc ="";
+	for (Element element : imgElements) {
+		tempSrc = element.attr("src");
+		if(isInBetween(tempSrc)){
+			error.append("第").append(i + 1 + "题,第")
+			.append((item + 1) + "小题,图片宽度范围为600px~640px。<br/>");
+			statu = false;
+			}
+												
+	}
+
+
+public static boolean isInBetween(String src) {
+
+		try {
+			InputStream is = new URL(src).openStream();
+			BufferedImage sourceImg = ImageIO.read(is);
+			if (sourceImg.getWidth() < 600 || sourceImg.getWidth() > 640) {
+				return true;
+			}else{
+				return false;
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			return true;
+		}
+	}
+
+```
+
+##### 7.去除所有样式
+
+```java
+public static String delHTMLTag(String htmlStr) {
+		String regEx_script = "<script[^>]*?>[\\s\\S]*?<\\/script>"; // 定义script的正则表达式
+		String regEx_style = "<style[^>]*?>[\\s\\S]*?<\\/style>"; // 定义style的正则表达式
+		String regEx_html = "<[^>]+>"; // 定义HTML标签的正则表达式
+
+		Pattern p_script = Pattern.compile(regEx_script, Pattern.CASE_INSENSITIVE);
+		Matcher m_script = p_script.matcher(htmlStr);
+		htmlStr = m_script.replaceAll(""); // 过滤script标签
+
+		Pattern p_style = Pattern.compile(regEx_style, Pattern.CASE_INSENSITIVE);
+		Matcher m_style = p_style.matcher(htmlStr);
+		htmlStr = m_style.replaceAll(""); // 过滤style标签
+
+		Pattern p_html = Pattern.compile(regEx_html, Pattern.CASE_INSENSITIVE);
+		Matcher m_html = p_html.matcher(htmlStr);
+		htmlStr = m_html.replaceAll(""); // 过滤html标签
+		htmlStr = htmlStr.replace("&nbsp;", "");
+		return htmlStr.trim(); // 返回文本字符串
+	}
+```
+
+##### 8.去除空格
+
+```java
+public static String replaceBlank(String str) {
+		String dest = "";
+		if (str != null) {
+			Pattern p = Pattern.compile("\\s*|\t|\r|\n");
+			Matcher m = p.matcher(str);
+			dest = m.replaceAll("");
+			dest = dest.replace((char) 12288, ' ').trim();
+		}
+		return dest;
+	}
+
+	public static String replacingFirstMatch(String str1, String str2) {
+		Pattern p = Pattern.compile(str1);
+		Matcher m = p.matcher(str2);
+		String tmp = m.replaceFirst(" ");
+		return tmp.trim();
+	}
+```
+
 
 
 ## 防止绕过登录 url访问
