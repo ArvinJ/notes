@@ -1,3 +1,19 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 # Java
 
 ##### 1.replace()，replaceAll()区别
@@ -551,6 +567,23 @@ referenceName -- 可以是一个 Byte, Double, Integer, Float, Long 或 Short �
 }
 
   
+```
+
+
+
+# java知识点
+
+##### 1.java GUI 图形用户界面
+
+```java
+
+
+
+
+
+
+
+
 ```
 
 
@@ -1344,6 +1377,14 @@ public static String replaceBlank(String str) {
 # soft
 
 ##### 1.Zeplin   用于 产品UI交互图
+
+
+
+# exe4j
+
+```doc
+java 导出 jar文件后 用 exe4j生成可执行exe文件。
+```
 
 
 
