@@ -1,19 +1,5 @@
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 # Java
 
 ##### 1.replace()，replaceAll()区别
@@ -798,6 +784,22 @@ document.removeEventListener('touchmove', me.preHandler, false);//浮层关闭�
 
 ```javasc
 <li title="提示" />
+```
+
+##### 4.js split 的用法和定义 js split分割字符串成数组的实例代码
+
+```javasc
+<script language="javascript"> 
+  str="2,2,3,5,6,6"; //这是一字符串 
+  var strs= new Array(); //定义一数组 
+  strs=str.split(","); //字符分割 
+  for (i=0;i<strs.length ;i++ ) 
+  { 
+  document.write(strs[i]+"<br/>"); //分割后的字符输出 
+  } 
+</script> 
+
+
 ```
 
 
