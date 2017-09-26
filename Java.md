@@ -555,6 +555,151 @@ referenceName -- 可以是一个 Byte, Double, Integer, Float, Long 或 Short �
   
 ```
 
+##### 9.Date与String的互换 
+
+```java
+SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");  
+String str=sdf.format(new Date()); 
+package test;  
+import java.text.DateFormat;  
+import java.text.SimpleDateFormat;  
+import java.text.ParseException;  
+import java.util.Date;  
+public class StringOrDate {  
+    public static String dateToString(Date date, String type) {  
+        String str = null;  
+        DateFormat format = new SimpleDateFormat("yyyy-MM-dd");  
+        if (type.equals("SHORT")) {  
+            // 07-1-18  
+            format = DateFormat.getDateInstance(DateFormat.SHORT);  
+            str = format.format(date);  
+        } else if (type.equals("MEDIUM")) {  
+            // 2007-1-18  
+            format = DateFormat.getDateInstance(DateFormat.MEDIUM);  
+            str = format.format(date);  
+        } else if (type.equals("FULL")) {  
+            // 2007年1月18日 星期四  
+            format = DateFormat.getDateInstance(DateFormat.FULL);  
+            str = format.format(date);  
+        }  
+        return str;  
+    }  
+    public static Date stringToDate(String str) {  
+        DateFormat format = new SimpleDateFormat("yyyy-MM-dd");  
+        Date date = null;  
+        try {  
+            // Fri Feb 24 00:00:00 CST 2012  
+            date = format.parse(str);   
+        } catch (ParseException e) {  
+            e.printStackTrace();  
+        }  
+        // 2012-02-24  
+        date = java.sql.Date.valueOf(str);  
+                                              
+        return date;  
+    }  
+    public static void main(String[] args) {  
+        Date date = new Date();  
+        System.out.println(StringOrDate.dateToString(date, "MEDIUM"));  
+        String str = "2012-2-24";  
+        System.out.println(StringOrDate.stringToDate(str));  
+    }  
+```
+
+# JSP
+
+##### 1.iframe与本页面（parent页面）进行互信
+
+```jsp
+父页面调用子页面
+父页面内容：
+<body>
+  <iframe id="MyFrame" src=""  scrolling="auto"></iframe>
+</body>
+
+ function onSubmit1(currentPage, tag) {
+	 $("#MyFrame").attr("src", "${pageContext.request.contextPath }/homework/makeUpIframe.jsp?		log="+log+"&status="+status+"&currentPage="+currentPage);
+
+ });
+子页面内容：
+    var log="${param.log}";
+	var status="${param.status}";
+	var currentPage="${param.currentPage}";
+	var url = "${pageContext.request.contextPath }/question/findDesigntedQuestions.action";
+	$.ajax({
+			type : "post",
+			async : false,
+			url : url,
+			data : {
+				"catalogId" : log,
+				"statusNow" :status,
+				"pagerInfo.pageIndex": currentPage
+			},
+			dataType : "json",
+			contenttype : "application/x-www-form-urlencoded;charset=utf-8",
+			cache : "false",
+			timeout : 8000,
+			success : function(resp) {
+              layer.msg("获取到数据然后append set到当前页面中的div中");
+			},
+			error : function() {
+				layer.msg("请求失败");
+			}
+		});
+
+		function makeUpDel(id){
+		layer.msg('确定删除当前题目吗？', {
+			  time: 0 //不自动关闭
+			  ,btn: ['确定', '取消']
+			  ,yes: function(index){
+				$.ajax({
+					type:"post",
+					url:"${pageContext.request.contextPath}/question/delMakeUpAnswerQuestion.action",
+					data:{"pms.id":id},
+					dataType:"json",
+					cache:"false",
+					async: false,
+					timeout:8000,
+					success:function(data){
+						layer.msg("删除成功！");
+						window.parent.onSubmit();
+//window.location.href="${pageContext.request.contextPath }/homework/makeUpIframe.jsp?log="+log+"&status="+status+"&currentPage="+currentPage;
+					}	
+				});
+			}
+		});	
+	}
+
+子页面回调父页面方法
+window.parent.onSubmit();
+
+
+```
+
+
+
+## webService三要素
+
+##### 1.SOAP
+
+***S***imple ***O***bject ***A***ccess ***P***rotocol 简单对象访问协议    是一种轻量的、简单的、基于[XML](https://baike.baidu.com/item/XML)（[标准通用标记语言](https://baike.baidu.com/item/%E6%A0%87%E5%87%86%E9%80%9A%E7%94%A8%E6%A0%87%E8%AE%B0%E8%AF%AD%E8%A8%80)下的一个子集）的协议，它被设计成在WEB上交换结构化的和固化的信息。
+
+soap用来描述传递信息的格式
+
+##### 2.WSDL
+
+***W***eb***S***ervices***D***escription***L***anguage     WSDL 用来描述如何访问具体的接口
+
+##### 3.UDDI
+
+(**U***niversal***D***escription***D***iscover**y and***I***ntegration*)
+
+ uddi用来管理，分发，查询webService 。
+
+
+
+
+
 
 
 # java知识点
@@ -1380,7 +1525,253 @@ public static String replaceBlank(String str) {
 
 ##### 1.Zeplin   用于 产品UI交互图
 
+# Layer
 
+##### 1.弹出层
+
+//prompt层
+
+```
+    	layer.prompt({title: '请输入驳回的原因，并确认', formType: 2,maxlength: 150}, function(text, index){
+    	layer.close(index);
+    	if(!!text){
+    		layer.msg("text---"+text);
+    	}else{
+    		layer.msg("请输入驳回原因");
+    	}
+    	});
+```
+##### 2. layer.open 固定布局
+
+```html
+fix:true
+默认：true
+即鼠标滚动时，层是否固定在可视区域。如果不想，设置fix: false即可
+
+layer.open({  
+	    type: 2, 
+	    skin: '#f90',
+	    title: '修改题目',
+	    fix: true,
+	    shadeClose: true,
+	    maxmin: true,
+	    area: [h,w], // 1020,1000
+	    content: "${pageContext.request.contextPath }/teacher/modifyPrivateQuestion.action,
+	    success: function(layero, index){
+	    	$("div[id^='layui-layer-shade']").unbind("click");
+	    	$("div[id^='layui-layer'][type='iframe']").css("top","30px");
+	    }
+	});
+
+type: - 基本层类型
+类型：Number，默认：0
+layer提供了5种层类型。可传入的值有：0（信息框，默认）1（页面层）2（iframe层）3（加载层）4（tips层）
+
+title - 标题
+类型：String/Array/Boolean，默认：'信息'
+title支持三种类型的值，若你传入的是普通的字符串，如title :'我是标题'，那么只会改变标题文本；若你还需要自定义标题区域样式，那么你可以title: ['文本', 'font-size:18px;']，数组第二项可以写任意css样式；如果你不想显示标题栏，你可以title: false
+
+content - 内容
+类型：String/DOM/Array，默认：''
+content可传入的值是灵活多变的，不仅可以传入普通的html内容，还可以指定DOM，更可以随着type的不同而不同。
+
+/!*
+ 如果是页面层
+ */
+layer.open({
+  type: 1, 
+  content: '传入任意的文本或html' //这里content是一个普通的String
+});
+layer.open({
+  type: 1,
+  content: $('#id') //这里content是一个DOM
+});
+//Ajax获取
+$.post('url', {}, function(str){
+  layer.open({
+    type: 1,
+    content: str //注意，如果str是object，那么需要字符拼接。
+  });
+});
+/!*
+ 如果是iframe层
+ */
+layer.open({
+  type: 2, 
+  content: 'http://sentsin.com' //这里content是一个URL，如果你不想让iframe出现滚动条，你还可以content: ['http://sentsin.com', 'no']
+}); 
+/!*
+ 如果是用layer.open执行tips层
+ */
+layer.open({
+  type: 4,
+  content: ['内容', '#id'] //数组第二项即吸附元素选择器或者DOM
+});       
+
+
+skin - 样式类名
+类型：String，默认：''
+skin不仅允许你传入layer内置的样式class名，还可以传入您自定义的class名。这是一个很好的切入点，意味着你可以借助skin轻松完成不同的风格定制。目前layer内置的skin有：layui-layer-lanlayui-layer-molv，未来我们还会选择性地内置更多，但更推荐您自己来定义。以下是一个自定义风格的简单例子
+
+area - 宽高
+类型：String/Array，默认：'auto'
+在默认状态下，layer是宽高都自适应的，但当你只想定义宽度时，你可以area: '500px'，高度仍然是自适应的。当你宽高都要定义时，你可以area: ['500px', '300px']
+
+offset - 坐标
+类型：String/Array，默认：'auto'
+默认垂直水平居中。但当你只想定义top时，你可以offset: '100px'。当您top、left都要定义时，你可以offset: ['100px', '200px']。除此之外，你还可以定义offset: 'rb'，表示右下角。其它的特殊坐标，你可以自己计算赋值。
+
+icon - 图标。信息框和加载层的私有参数
+类型：Number，默认：-1（信息框）/0（加载层）
+信息框默认不显示图标。当你想显示图标时，默认皮肤可以传入0-6如果是加载层，可以传入0-2。
+//eg1
+layer.alert('酷毙了', {icon: 1});
+//eg2
+layer.msg('不开心。。', {icon: 5});
+//eg3
+layer.load(1); //风格1的加载
+
+
+btn - 按钮
+类型：String/Array，默认：'确认'
+信息框模式时，btn默认是一个确认按钮，其它层类型则默认不显示，加载层和tips层则无效。当您只想自定义一个按钮时，你可以btn: '我知道了'，当你要定义两个按钮时，你可以btn: ['yes', 'no']。当然，你也可以定义更多按钮，比如：btn: ['按钮1', '按钮2', '按钮3', …]，按钮1和按钮2的回调分别是yes和cancel，而从按钮3开始，则回调为btn3: function(){}，以此类推。如：
+//eg1       
+layer.confirm('纳尼？', {
+  btn: ['按钮一', '按钮二', '按钮三'] //可以无限个按钮
+  ,btn3: function(index, layero){
+    //按钮【按钮三】的回调
+  }
+}, function(index, layero){
+  //按钮【按钮一】的回调
+}, function(index){
+  //按钮【按钮二】的回调
+});
+//eg2
+layer.open({
+  content: 'test'
+  ,btn: ['按钮一', '按钮二', '按钮三']
+  ,yes: function(index, layero){
+    //按钮【按钮一】的回调
+  },btn2: function(index, layero){
+    //按钮【按钮二】的回调
+  },btn3: function(index, layero){
+    //按钮【按钮三】的回调
+  }
+  ,cancel: function(){ 
+    //右上角关闭回调
+  }
+});
+
+
+closeBtn - 关闭按钮
+类型：String/Boolean，默认：1
+layer提供了两种风格的关闭按钮，可通过配置1和2来展示，如果不显示，则closeBtn: 0
+
+shade - 遮罩
+类型：String/Array/Boolean，默认：0.3
+即弹层外区域。默认是0.3透明度的黑色背景（'#000'）。如果你想定义别的颜色，可以shade: [0.8, '#393D49']；如果你不想显示遮罩，可以shade: 0
+
+shadeClose - 是否点击遮罩关闭
+类型：Boolean，默认：false
+如果你的shade是存在的，那么你可以设定shadeClose来控制点击弹层外区域关闭。
+
+time - 自动关闭所需毫秒
+类型：Number，默认：0
+默认不会自动关闭。当你想自动关闭时，可以time: 5000，即代表5秒后自动关闭，注意单位是毫秒（1秒=1000毫秒）
+
+id - 用于控制弹层唯一标识
+类型：String，默认：空字符
+设置该值后，不管是什么类型的层，都只允许同时弹出一个。一般用于页面层和iframe层模式
+
+shift - 动画
+类型：Number，默认：0
+从1.9开始，我们的出场动画全部采用CSS3。这意味着除了ie6-9，其它所有浏览器都是支持的。目前shift可支持的动画类型有0-6
+
+maxmin - 最大最小化。
+类型：Boolean，默认：false
+该参数值对type:1和type:2有效。默认不显示最大小化按钮。需要显示配置maxmin: true即可
+
+fix - 固定
+类型：Boolean，默认：true
+即鼠标滚动时，层是否固定在可视区域。如果不想，设置fix: false即可
+
+scrollbar - 是否允许浏览器出现滚动条
+类型：Boolean，默认：true
+默认允许浏览器滚动，如果设定scrollbar: false，则屏蔽
+
+maxWidth - 最大宽度
+类型：，默认：360
+当area: 'auto'时，maxWidth的设定才有效。
+
+zIndex - 层叠顺序
+类型：，默认：19891014（贤心生日 0.0）
+一般用于解决和其它组件的层叠冲突。
+
+move - 触发拖动的元素
+类型：String/DOM/Boolean，默认：'.layui-layer-title'
+默认是触发标题区域拖拽。如果你想单独定义，指向元素的选择器或者DOM即可。如move: '.mine-move'。你还配置设定move: false来禁止拖拽
+
+moveType - 拖拽风格
+类型：Number，默认：0
+默认的拖拽风格正如你所见到的，会有个过度的透明框。但是如果你不喜欢，你可以设定moveType: 1切换到传统的拖拽模式
+
+moveOut - 是否允许拖拽到窗口外
+类型：Boolean，默认：false
+默认只能在窗口内拖拽，如果你想让拖到窗外，那么设定moveOut: true即可
+
+moveEnd - 拖动完毕后的回调方法
+类型：Function，默认：null
+默认不会触发moveEnd，如果你需要，设定moveEnd: function(){}即可。
+
+tips - tips方向和颜色
+类型：Number/Array，默认：2
+tips层的私有参数。支持上右下左四个方向，通过1-4进行方向设定。如tips: 3则表示在元素的下面出现。有时你还可能会定义一些颜色，可以设定tips: [1, '#c00']
+
+tipsMore - 是否允许多个tips
+类型：Boolean，默认：false
+允许多个意味着不会销毁之前的tips层。通过tipsMore: true开启
+
+success - 层弹出后的成功回调方法
+类型：Function，默认：null
+当你需要在层创建完毕时即执行一些语句，可以通过该回调。success会携带两个参数，分别是当前层DOM当前层索引。如：
+layer.open({
+  content: '测试回调',
+  success: function(layero, index){
+    console.log(layero, index);
+  }
+});        
+
+yes - 确定按钮回调方法
+类型：Function，默认：null
+该回调携带两个参数，分别为当前层索引、当前层DOM对象。如：
+layer.open({
+  content: '测试回调',
+  yes: function(index, layero){
+    //do something
+    layer.close(index); //如果设定了yes回调，需进行手工关闭
+  }
+}); 
+
+cancel - 取消和关闭按钮触发的回调
+类型：Function，默认：null
+该回调同样只携带当前层索引一个参数，无需进行手工关闭。如果不想关闭，return false即可，如 cancel: function(index){ return false; } 则不会关闭；
+
+end - 层销毁后触发的回调
+类型：Function，默认：null
+无论是确认还是取消，只要层被销毁了，end都会执行，不携带任何参数。
+full/min/restore -分别代表最大化、最小化、还原 后触发的回调
+类型：Function，默认：null
+携带一个参数，即当前层DOM
+
+
+
+```
+
+
+
+
+
+​
 
 # exe4j
 
