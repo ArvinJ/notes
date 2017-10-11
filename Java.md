@@ -944,6 +944,22 @@ window.parent.onSubmit();
 
 ```
 
+###### 2.在jsp页面中，ajax请求到数据 后 拼接字符串时，设置到指定的div中， 请求的某个属性值内容为Html文本，html内容中包括了单引号和双引号
+
+```javascript
+内容中同时出现单引号和双引号时，采取转义的方式解决。
+&：&amp;
+" ：&quot;
+< ：&lt;
+> ：&gt;
+ &apos;     ----单引号
+ $#39;        ----单引号（兼容IE）
+var questionAnswer = data.childrens[i].correctAnswer;
+var reg = new RegExp( /'/g , "g" );  //  /\"/g 表示 双引号  ; /'/g 表示 单引号
+var newstr = questionAnswer.replace( reg , "&apos;" );
+questionAnswer = newstr;
+```
+
 
 
 ## webService三要素
