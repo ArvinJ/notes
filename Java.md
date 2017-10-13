@@ -874,6 +874,21 @@ public class StringOrDate {
     }  
 ```
 
+###### 10endWith() ;startWith();lastIndexOf()  subString();
+
+```java
+String tempCatalogName = catalogService.accessToTheParent(catalogId,"").trim();
+		//question.setCatalogName(tempCatalogName.substring(0,tempCatalogName.length()-2));
+		if(tempCatalogName.endsWith(">")){
+			int temp = tempCatalogName.lastIndexOf(">");
+			question.setCatalogName(tempCatalogName.substring(0,temp));
+		}
+```
+
+
+
+
+
 # JSP
 
 ##### 1.iframe与本页面（parent页面）进行互信
@@ -959,6 +974,38 @@ var reg = new RegExp( /'/g , "g" );  //  /\"/g 表示 双引号  ; /'/g 表示 �
 var newstr = questionAnswer.replace( reg , "&apos;" );
 questionAnswer = newstr;
 ```
+
+###### 3.fn:contains()函数-------函数用于确定一个字符串是否包含指定的子串。
+
+```jsp
+
+
+
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+<html>
+<head>
+<title>使用 JSTL 函数</title>
+</head>
+<body>
+
+<c:set var="theString" value="I am from runoob"/>
+
+<c:if test="${fn:contains(theString, 'runoob')}">
+   <p>找到 runoob<p>
+</c:if>
+
+<c:if test="${fn:contains(theString, 'RUNOOB')}">
+   <p>找到 RUNOOB<p>
+</c:if>
+
+</body>
+</html>
+```
+
+
 
 
 
@@ -2218,4 +2265,25 @@ DAO 层:数据访问层,与底层 MySQL、Oracle、Hbase 进行数据交互。 �
 ````
 
 
+
+# 小东西
+
+## 1.[给自己的博客设置动态小人时钟](http://www.cnblogs.com/dingxiansen/p/6675671.html)
+
+```html
+<html>
+<head>
+
+</head>
+<body>
+<div ><embed wmode="transparent" src="http://chabudai.sakura.ne.jp/blogparts/honehoneclock/honehone_clock_tr.swf" quality="high" bgcolor="#ffffff" width="160" height="70" name="honehoneclock" align="middle" allowscriptaccess="always" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer"></div>
+</body>
+</html>
+```
+
+
+
+## 2.AmyCheck 开票soft
+
+https://github.com/ArvinJ/notes.git
 
