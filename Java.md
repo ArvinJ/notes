@@ -1370,6 +1370,126 @@ DELETE FROM Person WHERE LastName = 'Wilson'
 select * from t_question order by _id desc limit 10;
 ```
 
+###### 7.sql的表查询重复数据
+
+```sql
+SELECT  * from t_question_property a where a.question_id
+  in (
+  SELECT question_id   FROM t_question_property 
+  where  property_key = 'reject_desc' 
+  GROUP BY question_id HAVING  COUNT(id) >1 
+  );
+
+
+CREATE TABLE `table1` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `classid` int(11) DEFAULT NULL,
+  `sex` varchar(10) DEFAULT NULL,
+  `age` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8;
+
+--添加测试数据
+    Insert into table1(classid,sex,age) values(1,'男',20)
+    Insert into table1(classid,sex,age) values(2,'女',22);
+    Insert into table1(classid,sex,age) values(3,'男',23);
+    Insert into table1(classid,sex,age) values(4,'男',22);
+    Insert into table1(classid,sex,age) values(1,'男',24);
+    Insert into table1(classid,sex,age) values(2,'女',19);
+    Insert into table1(classid,sex,age) values(4,'男',26);
+    Insert into table1(classid,sex,age) values(1,'男',24);
+    Insert into table1(classid,sex,age) values(1,'男',20);
+    Insert into table1(classid,sex,age) values(2,'女',22);
+    Insert into table1(classid,sex,age) values(3,'男',23);
+    Insert into table1(classid,sex,age) values(4,'男',22);
+    Insert into table1(classid,sex,age) values(1,'男',24);
+    Insert into table1(classid,sex,age) values(2,'女',19);
+
+
+--举例子说明：查询table表查询每一个班级中年龄大于20，性别为男的人数
+select COUNT(*)as '>20岁人数',classid  from table1 where sex='男' group by classid,age having age>20 
+```
+
+###### 8.Sql  TOP  查询表中前多少条数据
+
+```sql
+select TOP 5 * from t;   ==    select * from t limit 5;
+```
+
+###### 9. Sql  LIKE   NOT LIKE搜索列中的指定模式
+
+ ```sql
+
+SELECT * FROM Persons
+WHERE City LIKE 'N%';
+
+SELECT * FROM Persons
+WHERE City NOT LIKE '%lon%';
+ ```
+
+###### 10.SQL 通配符
+
+```sql
+通配符				描述
+%				替代一个或多个字符
+_				仅替代一个字符
+[charlist]		字符列中的任何单一字符
+[^charlist]
+或者			   不在字符列中的任何单一字符
+[!charlist]
+
+希望从"Persons" 表中选取名字的第一个字符之后是 "eorge" 的人：
+SELECT * FROM Persons
+WHERE FirstName LIKE '_eorge';
+
+"Persons" 表中选取居住的城市以 "A" 或 "L" 或 "N" 开头的人：		
+SELECT * FROM Persons
+WHERE City LIKE '[ALN]%'
+```
+
+###### 11. SQL IN
+
+```sql
+
+IN 操作符允许我们在 WHERE 子句中规定多个值。
+
+SELECT * FROM Persons
+WHERE LastName IN ('Adams','Carter');
+```
+
+###### 12.SQL BETWEEN
+
+```sql
+BETWEEN 操作符在 WHERE 子句中使用，作用是选取介于两个值之间的数据范围。
+操作符 BETWEEN ... AND 会选取介于两个值之间的数据范围。这些值可以是数值、文本或者日期。
+
+如需以字母顺序显示介于 "Adams"（包括）和 "Carter"（不包括）之间的人，请使用下面的 SQL：
+SELECT * FROM Persons
+WHERE LastName
+BETWEEN 'Adams' AND 'Carter'
+
+如需使用上面的例子显示范围之外的人，请使用 NOT 操作符：
+SELECT * FROM Persons
+WHERE LastName
+NOT BETWEEN 'Adams' AND 'Carter'
+
+```
+
+###### 13.SQL Alias（别名）
+
+```sql
+通过使用 SQL，可以为列名称和表名称指定别名（Alias）。
+
+列的 SQL Alias 语法
+SELECT LastName AS Family, FirstName AS Name
+FROM Persons
+
+表的 SQL Alias 语法
+SELECT column_name(s)
+FROM table_name
+AS alias_name
+```
+
 
 
 
