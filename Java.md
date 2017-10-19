@@ -1976,6 +1976,31 @@ public static String replaceBlank(String str) {
 
 ##### 1.Zeplin   用于 产品UI交互图
 
+## 1.MySQL重装失败（Error Nr.1045）
+
+```doc
+解决办法：
+  1.控制面板---卸载MySQL；
+
+   2. 删除C:\Program Files\MySQL目录；
+
+   3. 删除C:\ProgramData\MySQL目录（注意ProgramData是隐藏文件，需要开启隐藏可见）；
+
+   4. 检查C:\WINDOWS目录下是否有my.ini文件,将其删除；
+
+   5. 注册表里的HKEY_LOCAL_MACHINE，SOFTWARE，MYSQL删除
+ HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Services\Eventlog\Application\MySQL 目录删除
+
+HKEY_LOCAL_MACHINE\SYSTEM\ControlSet002\Services\Eventlog\Application\MySQL 目录删除
+
+HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\Eventlog\Application\MySQL 目录删除
+
+6.重启电脑，重新安装MySQL，安装过程进行到root密码设置时，由于是第二次安装，会多出一项Current root password
+因为之前第一次没有安装成功，密码设置是无效的，所以Current root password为空，此处就不填，只用在New root password框中输入新密码即可，此项必填，不然无法进行下一步，接下来按部就班安装就可以了，祝好运！
+```
+
+
+
 # Layer
 
 ##### 1.弹出层
