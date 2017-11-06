@@ -19,7 +19,11 @@ import jxl.Cell;
 import jxl.Sheet;
 import jxl.Workbook;
 import jxl.read.biff.BiffException;
-
+/**
+ * 
+ * @author wenjin.zhu
+ *
+ */
 public class ExcelMain {
 	// 把xml文件读成 字符流
 	public static String xmlToLiu(String path) throws Exception {

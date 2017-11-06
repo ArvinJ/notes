@@ -268,6 +268,42 @@ spring-boot-starter-mustache Mustache 模板视图依赖
 
 
 
+# Struts2
+
+###### 1.struts2过滤用户提交表单非法字符
+
+
+
+```xml
+web.xml
+<!-- 非法字符过滤 -->
+ 	<filter>
+  		<filter-name>IllegalCharacterFilter</filter-name>
+  		<filter-class>
+   			com.wheatek.filter.IllegalCharacterFilter
+  		</filter-class>
+  		<init-param>
+   			<param-name>characterParams</param-name>
+   			<!-- %22%20%3E是转码后的大于号 -->
+   			<param-value>script,%22%20%3E</param-value>
+  		</init-param>
+ 	</filter>
+ 	<filter-mapping>
+  		<filter-name>IllegalCharacterFilter</filter-name>
+ 		<url-pattern>/*</url-pattern>
+ 	</filter-mapping>
+```
+
+
+
+2.xss注入
+
+3.http://www.cnblogs.com/kobe8/p/4030396.html    URL编码表
+
+
+
+
+
 # Java
 
 ##### 1.replace()，replaceAll()区别
@@ -874,7 +910,9 @@ public class StringOrDate {
     }  
 ```
 
-###### 10endWith() ;startWith();lastIndexOf()  subString();
+
+
+###### 10.endWith() ;startWith();lastIndexOf()  subString();
 
 ```java
 String tempCatalogName = catalogService.accessToTheParent(catalogId,"").trim();
@@ -883,6 +921,155 @@ String tempCatalogName = catalogService.accessToTheParent(catalogId,"").trim();
 			int temp = tempCatalogName.lastIndexOf(">");
 			question.setCatalogName(tempCatalogName.substring(0,temp));
 		}
+```
+
+###### 11.密码生成方式
+
+```java
+package com.tool.user;
+
+import java.security.MessageDigest;
+import java.util.Random;
+
+import sun.misc.BASE64Encoder;
+
+/**
+ * 
+ * @description 密码生成器
+ * @author wenjin.zhu
+ * @Date 2017年10月30日
+ */
+public class GeneratePassword {
+
+	/**
+	 * 数字密码
+	 * 
+	 * @param code
+	 * @return
+	 */
+	public static String modeOfFirstNumber(String code) {
+
+		Random rand = new Random();// 生成随机数
+		for (int a = 0; a < 6; a++) {
+			code += rand.nextInt(10);// 生成6位验证码
+		}
+
+		return code;
+	}
+
+	/**
+	 * 封装的数字密码
+	 * 
+	 * @param min
+	 * @param max
+	 * @return
+	 */
+	public static int modeOfSecondNumber(int min, int max) {
+		int randNum = min + (int) (Math.random() * ((max - min) + 1));
+		return randNum;
+	}
+
+	/**
+	 * 数字加字母的密码
+	 * 
+	 * @param length
+	 * @return
+	 */
+	public static String modeOfThirdNumberAndLetter(int length) {
+		String val = "";
+		Random random = new Random();
+		// length为几位密码
+		for (int i = 0; i < length; i++) {
+			String charOrNum = random.nextInt(2) % 2 == 0 ? "char" : "num";
+			// 输出字母还是数字
+			if ("char".equalsIgnoreCase(charOrNum)) {
+				// 输出是大写字母还是小写字母
+				int temp = random.nextInt(2) % 2 == 0 ? 65 : 97;
+				val += (char) (random.nextInt(26) + temp);
+			} else if ("num".equalsIgnoreCase(charOrNum)) {
+				val += String.valueOf(random.nextInt(10));
+			}
+		}
+		return val;
+	}
+
+	/**
+	 * 随机不重复的6-8位
+	 * 
+	 * @return
+	 */
+	public static int modeOfForthNoRepeatNumber() {
+		int[] array = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+		Random rand = new Random();
+		for (int i = 10; i > 1; i--) {
+			int index = rand.nextInt(i);
+			int tmp = array[index];
+			array[index] = array[i - 1];
+			array[i - 1] = tmp;
+		}
+		int result = 0;
+		for (int i = 0; i < 6; i++) {
+			result = result * 10 + array[i];
+		}
+		return result;
+	}
+
+	/**
+	 * 生成数字与字符随机组合
+	 * 
+	 * @param length
+	 * @param num
+	 * @return
+	 */
+	public static String modeOfFifthNumberAndLetter(int length) {
+		String val = "";
+		Random random = new Random();
+		for (int i = 0; i < length; i++) {
+			String charOrNum = random.nextInt(2) % 2 == 0 ? "char" : "num"; // 输出字母还是数字
+
+			if ("char".equalsIgnoreCase(charOrNum)) // 字符串
+			{
+				int choice = random.nextInt(2) % 2 == 0 ? 65 : 97; // 取得大写字母还是小写字母
+				val += (char) (choice + random.nextInt(26));
+			} else if ("num".equalsIgnoreCase(charOrNum)) // 数字
+			{
+				val += String.valueOf(random.nextInt(10));
+			}
+		}
+		val = val.toLowerCase();
+		return val;
+	}
+	
+	/**
+	 * MD5加密
+	 * 
+	 * @param str
+	 * @return
+	 */
+	public static String EncoderByMd5(String str) {
+		try {
+			MessageDigest md5 = MessageDigest.getInstance("MD5");
+			BASE64Encoder base64en = new BASE64Encoder();
+			str = base64en.encode(md5.digest(str.getBytes("utf-8")));
+		} catch (Exception e) {
+			 e.printStackTrace();
+		}
+		return str;
+	}
+
+	public static void main(String[] args) {
+		String code = modeOfFirstNumber("");
+
+		System.out.println("方式一随机6位数字为----" + code);
+		System.out.println("方式二随机数为----" + modeOfSecondNumber(1, 999999999));
+		System.out.println("方式三随机数字加字母----" + modeOfThirdNumberAndLetter(10));
+		System.out.println("方式四随机不重复的6-8位----" + modeOfForthNoRepeatNumber());
+		System.out.println("方式五随机数字加字母----" + EncoderByMd5(modeOfFifthNumberAndLetter(8)));
+
+	}
+
+}
+
 ```
 
 
@@ -1003,6 +1190,56 @@ questionAnswer = newstr;
 
 </body>
 </html>
+```
+
+## 
+
+###### 4.$.ajaxSettings.traditional=true;    前台传数组，后台接收  
+
+```jsp
+起初我认为traditional:true,可有可无，但是后来不用traditional的时候，发现后台无法获取selectUsers的值，那么可以肯定的是traditional默认值是false.
+当提交的参数是数组( {selectUsers:[value,value,value]} ),如果是false的话,则提交时会是"selectUsers[]=value&selectUsers[]=value"
+如果设置成true,则提交时会是"selectUsers=value&selectUsers=value"
+这样后台就能用String[] ids=request.getParameterValues("selectUsers"); 获取到值。
+
+前台jquery
+var selectUsers=new Array();
+$(":checkbox[name='userID']").each(function() {
+
+
+if ($(this).attr("checked"))
+selectUsers.push($(this).val());
+//selectUsers += "," + $(this).val();
+})
+
+$.ajax({
+//async : false,
+traditional: true,
+type:"post",
+url:"elecUserAction_delete.do",
+data:{selectUsers:selectUsers},
+
+/* success:function(responsText){
+if(responsText=="1"){
+alert("删除成功");
+}
+
+
+二：后台Action代码
+public String delete(){
+//ActionContext context=ActionContext.getContext(); 
+//HttpServletRequest request=(HttpServletRequest)context.get(ServletActionContext.HTTP_REQUEST); 
+
+String[] ids=request.getParameterValues("selectUsers");  
+
+System.out.println(ids.toString());
+PrintWriter out = null;
+out.write("1");
+
+return home();
+}
+
+
 ```
 
 
@@ -1974,7 +2211,7 @@ public static String replaceBlank(String str) {
 
 # soft
 
-##### 1.Zeplin   用于 产品UI交互图
+##### Zeplin   用于 产品UI交互图
 
 ## 1.MySQL重装失败（Error Nr.1045）
 
@@ -2431,4 +2668,8 @@ DAO 层:数据访问层,与底层 MySQL、Oracle、Hbase 进行数据交互。 �
 ## 2.AmyCheck 开票soft
 
 https://github.com/ArvinJ/notes.git
+
+## 3.ssm 代码生成
+
+http://www.renren.io/open/
 
